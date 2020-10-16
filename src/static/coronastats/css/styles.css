@@ -10414,3 +10414,11 @@ body {
 .footer {
   padding: 5rem 0;
 }
+
+.div-with-bg {
+  background-image: url("/static/coronastats/img/world-bg.jpg");
+}
+
+.image-bg {
+  background-color: #F9F9F9;
+}

@@ -6,4 +6,5 @@ class CountryForm(forms.Form):
     choice = forms.ChoiceField(choices = choices, label='Type of chart')
     # another_country = forms.CharField(required=False, label = 'Add another country')
 
-
+class CountryPageForm(forms.Form):
+	country = forms.CharField()
