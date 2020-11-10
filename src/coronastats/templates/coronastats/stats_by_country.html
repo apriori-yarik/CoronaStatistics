@@ -25,20 +25,24 @@
       <button class="btn btn-outline-info" type="submit">Show</button>
     </div>
   </form> -->
-  <form method="POST">
+  <div class="align-items-center">
+    <form method="POST">
     {% csrf_token %}
-    <fieldset class="form-group mt-5 text-white-50">
+    <fieldset class="form-group mt-5 text-white-50 justify-content-center">
       <legend class="border-bottom mb-4 text-center">Show Country Page</legend>
-      <div class="form-row ml-2">
+      <div class="form-row text-center d-flex justify-content-center">
         <div class="form-group col-md-6 mb-0">
           {{ form2.country|as_crispy_field }}
+          <span>Write the full name of a country (e.g. Bulgaria, United States, Czech Republic, South Korea, Russia, etc.)</span>
         </div>
       </div>
          </fieldset>
-    <div class="form-group">
+    <div class="form-group d-flex justify-content-center">
       <button class="btn btn-outline-info" type="submit">Show</button>
     </div>
   </form>
+  </div>
+  
   <!--{% if img_name == 'plots' %}
   <div class="d-flex flex-row justify-content-between align-items-center">
     <div class="text-center ml-5">

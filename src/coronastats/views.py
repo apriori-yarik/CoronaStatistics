@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import CountryForm, CountryPageForm
+from django.contrib.auth.forms import UserCreationForm
+
+from .forms import CountryForm, CountryPageForm #CreateUserForm
 from . import plots
 from .models import Country
+from .ml_predictions import new_cases_ml, new_deaths_ml
+from .man_Hopkins_data import confirmed_country_vs_outside, deaths_country_vs_outside, plot_pie_country_with_regions, hasRegions
 
 
 def home_view(request):
@@ -62,20 +66,26 @@ def world_view(request):
 	return render(request, 'coronastats/world.html', context)
 
 def country_view(request, name):
+	confirmed_country_vs_outside(name)
+	deaths_country_vs_outside(name)
+	plot_pie_country_with_regions(name, f'COVID-19 Confirmed Cases in {name}')
+	regions = hasRegions(name)
 	context = plots.get_stats_by_country(name)
+	context['hasRegions'] = regions
+	context['title'] = 'By Country'
 	print(context)
 	return render(request, 'coronastats/country.html', context)
 
 def predictions_forms_view(request):
 	country = ""
-	form2 = CountryForm()
+	form2 = CountryPageForm()
 	if request.method == 'POST':
-		form2 = CountryForm(request.POST)
+		form2 = CountryPageForm(request.POST)
 		if form2.is_valid():
 			country = form2.cleaned_data['country']
 			return redirect('predictions', name = country)
 		else:
-			form2 = CountryForm()
+			form2 = CountryPageForm()
 
 	context = {
 		'title': 'Predictions',
@@ -86,7 +96,30 @@ def predictions_forms_view(request):
 	return render(request, 'coronastats/predictions.html', context)
 
 def predictions_view(request, name):
-	return HttpResponse(f'<h1>{name}</h1>')
+	expected_confirmed = new_cases_ml(name)
+	expected_deaths = new_deaths_ml(name)
+	context = {
+		'title': 'Predictions',
+		'name': name,
+		'expected_confirmed': expected_confirmed,
+		'expected_deaths': expected_deaths
+	}
+	return render(request, 'coronastats/predictions-plots.html', context)
 
+
+
+#def login_view(request):
+#	context = {}
+#	return render(request, 'coronastats/login.html', context)
+#
+#def register_view(request):
+#	form = CreateUserForm()
+#
+#	if request.method == 'POST':
+#		form = CreateUserForm(request.POST)
+#		if form.is_valid:
+#			form.save()
+#	context = {'form': form}
+#	return render(request, 'coronastats/register.html', context)
 
 

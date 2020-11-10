@@ -5,7 +5,8 @@ from matplotlib import pyplot as plt
 import datetime
 from datetime import date
 from .models import Country
-from .ml_algorithms import ml_lin_reg_new_cases, ml_lin_reg_new_deaths
+import sklearn
+import math
 
 
 url = 'https://covid.ourworldindata.org/data/owid-covid-data.csv'
@@ -131,20 +132,20 @@ def get_stats_by_country(country_name):
 	print(country.name)
 	print(country_data['gdp_per_capita'])
 	return {	
-		'gdp_per_capita': country_data['gdp_per_capita'].values[0], 
-		'population': country_data['population'].values[0], 
-		'total_cases': country_data['total_cases'].values[0],
-		'new_cases': country_data['new_cases'].values[0],
-		'new_deaths': country_data['new_deaths'].values[0],
-		'total_deaths': country_data['total_deaths'].values[0],
-		'total_cases_per_million': country_data['total_cases_per_million'].values[0],
-		'total_deaths_per_million': country_data['total_deaths_per_million'].values[0],
-		'total_tests_per_thousand': country_data['total_tests_per_thousand'].values[0],
-		'total_tests': country_data['total_tests'].values[0],
-		'new_tests': country_data['new_tests'].values[0],
-		'median_age': country_data['median_age'].values[0],
-		'life_expectancy': country_data['life_expectancy'].values[0],
-		'human_development_index': country_data['human_development_index'].values[0],
+		'gdp_per_capita': str(round(country_data['gdp_per_capita'].values[0], 2)), 
+		'population': str(round(country_data['population'].values[0], 2)), 
+		'total_cases': str(round(country_data['total_cases'].values[0], 2)),
+		'new_cases': str(round(country_data['new_cases'].values[0], 2)),
+		'new_deaths': str(round(country_data['new_deaths'].values[0], 2)),
+		'total_deaths': str(round(country_data['total_deaths'].values[0], 2)),
+		'total_cases_per_million': str(round(country_data['total_cases_per_million'].values[0], 2)),
+		'total_deaths_per_million': str(round(country_data['total_deaths_per_million'].values[0], 2)),
+		'total_tests_per_thousand': str(round(country_data['total_tests_per_thousand'].values[0], 2)),
+		'total_tests': str(round(country_data['total_tests'].values[0], 2)),
+		'new_tests': str(round(country_data['new_tests'].values[0], 2)),
+		'median_age': str(round(country_data['median_age'].values[0], 2)),
+		'life_expectancy': str(round(country_data['life_expectancy'].values[0], 2)),
+		'human_development_index': str(round(country_data['human_development_index'].values[0], 2)),
 		'country': country,
 		'title': 'CoronaStatistcis - ' + country_name,
 	}
@@ -162,12 +163,15 @@ def get_plot_chart_new_cases(name):
 
 
 	plt.clf()
+	plt.style.use('default')
 	plt.style.use('dark_background')
 	plt.plot_date(country_data['date'], country_data[type_of_chart], linestyle='solid', marker="")
 	plt.gcf().autofmt_xdate()
-	plt.title(f'{type_of_chart_text} in {name}')
-	plt.xlabel('Date')
-	plt.ylabel('Value')
+	plt.title(f'{type_of_chart_text} in {name}', size=100)
+	plt.xlabel('Date', size=75)
+	plt.ylabel('Value', size=75)
+	plt.xticks(size=50)
+	plt.yticks(size=50)
 	plt.grid(True)
 	plt.tight_layout()
 	plt.savefig('static/coronastats/new_cases.png')
@@ -185,12 +189,16 @@ def get_plot_chart_total_cases(name):
 
 
 	plt.clf()
+	plt.style.use('default')
 	plt.style.use('dark_background')
+	plt.ticklabel_format(style = 'plain')
 	plt.plot_date(country_data['date'], country_data[type_of_chart], linestyle='solid', marker="")
 	plt.gcf().autofmt_xdate()
-	plt.title(f'{type_of_chart_text} in {name}')
-	plt.xlabel('Date')
-	plt.ylabel('Value')
+	plt.title(f'{type_of_chart_text} in {name}', size=100)
+	plt.xlabel('Date', size=75)
+	plt.ylabel('Value', size=75)
+	plt.xticks(size=50)
+	plt.yticks(size=50)
 	plt.grid(True)
 	plt.tight_layout()
 	plt.savefig('static/coronastats/total_cases.png')
@@ -209,12 +217,15 @@ def get_plot_chart_total_deaths(name):
 
 
 	plt.clf()
+	plt.style.use('default')
 	plt.style.use('dark_background')
 	plt.plot_date(country_data['date'], country_data[type_of_chart], linestyle='solid', marker="")
 	plt.gcf().autofmt_xdate()
-	plt.title(f'{type_of_chart_text} in {name}')
-	plt.xlabel('Date')
-	plt.ylabel('Value')
+	plt.title(f'{type_of_chart_text} in {name}', size=100)
+	plt.xlabel('Date', size=75)
+	plt.ylabel('Value', size=75)
+	plt.xticks(size=50)
+	plt.yticks(size=50)
 	plt.grid(True)
 	plt.tight_layout()
 	plt.savefig('static/coronastats/total_deaths.png')
@@ -232,12 +243,15 @@ def get_plot_chart_new_deaths(name):
 
 
 	plt.clf()
+	plt.style.use('default')
 	plt.style.use('dark_background')
 	plt.plot_date(country_data['date'], country_data[type_of_chart], linestyle='solid', marker="")
 	plt.gcf().autofmt_xdate()
-	plt.title(f'{type_of_chart_text} in {name}')
-	plt.xlabel('Date')
-	plt.ylabel('Value')
+	plt.title(f'{type_of_chart_text} in {name}', size=100)
+	plt.xlabel('Date', size=75)
+	plt.ylabel('Value', size=75)
+	plt.xticks(size=50)
+	plt.yticks(size=50)
 	plt.grid(True)
 	plt.tight_layout()
 	plt.savefig('static/coronastats/new_deaths.png')
@@ -246,7 +260,6 @@ def get_ml_graphs(name):
 	country_data = data.loc[data['location']==name]
 	ml_lin_reg_new_cases(country_data, name, 'new_cases')
 	ml_lin_reg_new_deaths(country_data, name, 'new_deaaths')
+
 	
-
-
 

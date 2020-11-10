@@ -77,7 +77,7 @@
     <header class="masthead">
       <div class="container d-flex h-100 align-items-center">
         <div class="mx-auto text-center">
-          <h1 class="mx-auto my-0 text-uppercase">CovidStatistics</h1>
+          <h1 class="mx-auto my-0 text-uppercase">CoronaStatistics</h1>
           <h2 class="text-white-50 mx-auto mt-2 mb-5">
             Covid-19 in numbers, graphs and charts
           </h2>
@@ -92,9 +92,9 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
-            <h2 class="text-white mb-5">COVIDSTATISTICS</h2>
+            <h2 class="text-white mb-5">CORONASTATISTICS</h2>
             <p class="text-white-50">
-              CovidStatistics is a web app which shows all the info about
+              CoronaStatistics is a web app which shows all the info about
               Covid-19 - new and total cases, deaths, number of recovered
               people, some statistics to make the situation more clear. You can
               compare two or more countries as well as see predictions about the
@@ -196,7 +196,7 @@
             <h2 class="text-white mt-2 mb-2">Don't waste your time!</h2>
             <div class="align-items-center">
               <div class="">
-                <a class="btn btn-secondary btn-sm mt-5 mr-4 mb-5" href="#"
+                <a class="btn btn-secondary btn-sm mt-5 mr-4 mb-5" href="{% url 'world' %}"
                   >World Statistics</a
                 >
                 <a
@@ -204,7 +204,7 @@
                   href="{% url 'stats-by-country' %}"
                   >Statistics By Country</a
                 >
-                <a class="btn btn-secondary btn-sm mt-5 mr-4 mb-5" href="#"
+                <a class="btn btn-secondary btn-sm mt-5 mr-4 mb-5" href="{% url 'predictions-form' %}"
                   >Predict</a
                 >
               </div>

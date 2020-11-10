@@ -1,100 +1,86 @@
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
-import datetime
-from datetime import date
-import sklearn
+import matplotlib.colors as mcolors
+import random
+import math
+import time
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVR
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+import datetime
+import operator
+from sklearn.preprocessing import PolynomialFeatures
 
+plt.style.use('fivethirtyeight')
 
-def ml_lin_reg_new_cases(data, name, type_of_chart):
-	values = data[type_of_chart]
-	future = 40
-	past = 180
-	start = past
-	end = len(values) - future
-	raw_data = [] # keeping all the information needed to to make the predictions - the previous values and the next which will be used to test our ML model
-	for i in range(start, end):
-   	    pfv = values[(i - past):(i + future)]
-   	    raw_data.append(list(pfv))
-    
-	past_columns = []
-	for i in range(past):
-		past_columns.append("past_{}".format(i))
-	future_columns = [] # keeping the next values
-	for i in range(future):
-		future_columns.append("future_{}".format(i))
+confirmed_cases = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv')
+deaths_reported = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv')
+recovered_cases = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv')
+latest_data = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/10-27-2020.csv')
 
-	df = pd.DataFrame(raw_data, columns = (past_columns + future_columns))
-	X = df[past_columns][:-1]
-	y = df[future_columns][:-1]
-	X_test = df[past_columns][-1:]
-	y_test = df[future_columns][-1:]
-	l = range(1, future + 1)
+cols = confirmed_cases.keys()
+confirmed = confirmed_cases.loc[:, cols[4]:cols[-1]]
+deaths = deaths_reported.loc[:, cols[4]:cols[-1]]
+recoveries = recovered_cases.loc[:, cols[4]:cols[-1]]
 
-	LinReg = LinearRegression()
-	LinReg.fit(X, y)
-	prediction = LinReg.predict(X_test)[0]
+dates = confirmed.keys()
 
-	type_of_chart_text = type_of_chart.capitalize()
-	type_of_chart_text = type_of_chart_text.replace('_', ' ')
+days_in_future = 20
+future_forecast = np.array([i for i in range(len(dates)+days_in_future)]).reshape(-1, 1)
+adjusted_dates = future_forecast[:-20]
 
-	# plotting the prediciton
-	plt.clf()
-	plt.style.use('dark_background')
-	plt.plot_date(l, prediction, linestyle='solid', marker="", label='prediction')
-	plt.gcf().autofmt_xdate()
-	plt.title(f'{type_of_chart} prediction in {name}')
-	plt.xlabel('Day')
-	plt.ylabel('Value')
-	plt.legend()
-	plt.grid(True)
-	plt.tight_layout()
+def daily_increase(data):
+    d = []
+    for i in range(len(data)):
+        if i == 0:
+            d.append(data[0])
+        else:
+            d.append(data[i] - data[i-1])
+    return d
 
-	plt.savefig('static/coronastats/new_cases_ml.png')
+def plot_predictions(x, y, pred, algo_name, color):
+    plt.figure(figsize=(16, 9))
+    #plt.plot(x, y)
+    plt.plot(future_forecast[-20:], pred, linestyle='dashed', color=color)
+    plt.title('Number of coronavirus cases over time', size=30)
+    #plt.xlabel('Days since 1/22/2020', size=30)
+    plt.ylabel('NUmber of Cases', size=30)
+    plt.legend(['Confirmed cases', algo_name], prop={'size': 20})
+    plt.xticks(size=20)
+    plt.yticks(size=20)
+    plt.savefig('static/coronastats/prediction_new_cases.png')
 
+def new_cases_prediction(country):
+	cases = []
+	for i in dates:
+		cases.append(confirmed_cases[confirmed_cases['Country/Region']==country][i].sum())
+	cases = daily_increase(cases)
+	days_since_1_22 = np.array([i for i in range(len(dates))]).reshape(-1,1)
+	cases = np.array(cases).reshape(-1, 1)
 
-def ml_lin_reg_new_deaths(data, name, type_of_chart):
-	values = data[type_of_chart]
-	future = 40
-	past = 180
-	start = past
-	end = len(values) - future
 	
-	raw_data = [] # keeping all the information needed to to make the predictions - the previous values and the next which will be used to test our ML model
-	for i in range(start, end):
-		pfv = values[(i - past):(i + future)]
-		raw_data.append(list(pfv))
 
-	past_columns = [] # keeping the previous values
-	for i in range(past):
-		past_columns.append("past_{}".format(i))
-	future_columns = [] # keeping the next values
-	for i in range(future):
-		future_columns.append("future_{}".format(i))
+	X_train_confirmed, X_test_confirmed, y_train_confirmed, y_test_confirmed = train_test_split(days_since_1_22, cases, test_size=0.25, shuffle=False)
+	
+	poly = PolynomialFeatures(degree=3)
+	poly_X_train_confirmed = poly.fit_transform(X_train_confirmed)
+	poly_X_test_confirmed = poly.fit_transform(X_test_confirmed)
+	poly_future_forecast = poly.fit_transform(future_forecast)
 
-	df = pd.DataFrame(raw_data, columns = (past_columns + future_columns))
-	X = df[past_columns][:-1]
-	y = df[future_columns][:-1]
-	X_test = df[past_columns][-1:]
-	y_test = df[future_columns][-1:]
-	l = range(1, future + 1)
+	linear_model = LinearRegression(normalize=True, fit_intercept=False)
+	linear_model.fit(poly_X_train_confirmed, y_train_confirmed)
+	test_linear_pred = linear_model.predict(poly_X_test_confirmed)
+	linear_pred = linear_model.predict(poly_future_forecast)
 
-	LinReg = LinearRegression()
-	LinReg.fit(X, y)
-	prediction = LinReg.predict(X_test)[0]
+	diff = abs(cases[len(cases) - 1] - linear_pred[len(linear_pred)-1])
 
-	type_of_chart_text = type_of_chart.capitalize()
-	type_of_chart_text = type_of_chart_text.replace('_', ' ')
+	if cases[len(cases) - 1] > linear_pred[len(cases) - 1]:
+		for i in range(len(cases), len(cases) + 20):
+			linear_pred[i] += diff
+	else:
+		for i in range(len(cases), len(cases) + 20):
+			linear_pred[i] -= diff
 
-	# plotting the prediciton
-	plt.clf()
-	plt.style.use('dark_background')
-	plt.plot_date(l, prediction, linestyle='solid', marker="", label='prediction')
-	plt.gcf().autofmt_xdate()
-	plt.title(f'{type_of_chart} prediction in {name}')
-	plt.xlabel('Day')
-	plt.ylabel('Value')
-	plt.legend()
-	plt.grid(True)
-	plt.tight_layout()
-
-	plt.savefig('static/coronastats/new_deaths_ml.png')
+	plot_predictions(adjusted_dates[-20:], cases[-20:], linear_pred[-20:], 'Polynomial Regression', 'red')
