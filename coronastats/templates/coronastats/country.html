@@ -1,0 +1,184 @@
+{% extends 'coronastats/base.html' %} 
+{% load crispy_forms_tags %} 
+{% load static %} 
+{% block content %}
+
+<div style="background-color: #f9f9f9">
+	<div class="mt-5 pt-5">
+		<div class="d-flex justify-content-center mb-3">
+			<img src="{{ country.flag_image.url }}">
+			<div class="ml-5 mr-5 mt-4">
+				<h1>{{ country.name }}</h1>
+			</div>
+			<img src="{{ country.flag_image.url }}">
+		</div>
+		<div class = "d-flex align-items-center justify-content-center">
+			<div class="mr-5 text-align-center" style="width:50%;"><img src="{{ country.map_image.url }}" style="display: block; margin: auto;"></div>
+			<div style="width:50%" class="text-align-center">
+				<div>
+  					<h2 class="text-center font-weight-bold color-white text-black mb-4">Information about the country</h2>
+  					<table class="table table-hover">
+  						<tbody>
+  							<tr class="table-warning text-center">
+  								<td>Population</td>
+  								<td>{{ population }}</td>
+  							</tr>
+  							<tr class="table-warning text-center">
+  								<td>GDP</td>
+  								<td>{{ gdp_per_capita }}</td>
+  							</tr>
+  							<tr class="table-warning text-center">
+  								<td>Median age</td>
+  								<td>{{ median_age }}</td>
+  							</tr>
+  							<tr class="table-warning text-center">
+  								<td>Life expectancy</td>
+  								<td>{{ life_expectancy }}</td>
+  							</tr>
+  							<tr class="table-warning text-center">
+  								<td>Human development index</td>
+  								<td>{{ human_development_index }}</td>
+  							</tr>
+  						</tbody>
+  					</table>
+  				</div>
+			</div>
+							
+		</div>
+		<div class="pt-5">
+			<div class="container">
+				<div class="text-center pt-5">
+					<h1 class="text-center font-weight-bold color-white text-black">Statistics</h1>
+				</div>
+				<div class="mt-5">
+					<table class="table table-hover">
+  						<thead>
+  							<tr class="text-center">
+  								<th><h1>New cases</h1></th>
+  								<th><h1>New deaths</h1></th>
+  								<th><h1>New tests</h1></th>
+  							</tr>
+  						</thead>
+  						<tbody>
+  							
+  								<tr class="text-center">
+  									<td><h1>{{ new_cases }}</h1></td>
+  									<td><h1>{{ new_deaths }}</h1></td>
+  									<td><h1>{{ new_tests }}</h1></td>
+  								</tr>
+  						</tbody>
+  					</table>
+				</div>
+				<div class="mt-5">
+					<table class="table table-hover">
+  						<thead>
+  							<tr class="text-center">
+  								<th><h1>Total cases</h1></th>
+  								<th><h1>Total deaths</h1></th>
+  								<th><h1>Total tests</h1></th>
+  							</tr>
+  						</thead>
+  						<tbody>
+  							
+  								<tr class="text-center">
+  									<td><h1>{{ total_cases }}</h1></td>
+  									<td><h1>{{ total_deaths }}</h1></td>
+  									<td><h1>{{ total_tests }}</h1></td>
+  								</tr>
+  						</tbody>
+
+  					</table>
+				</div>
+				<div class="mt-5">
+					<table class="table table-hover">
+  						<thead>
+  							<tr class="text-center">
+  								<th><h1>Total cases per million</h1></th>
+  								<th><h1>Total deaths per million</h1></th>
+  								<th><h1>Total tests per thousand</h1></th>
+  							</tr>
+  						</thead>
+  						<tbody>
+  							
+  								<tr class="text-center">
+  									<td><h1>{{ total_cases_per_million }}</h1></td>
+  									<td><h1>{{ total_deaths_per_million }}</h1></td>
+  									<td><h1>{{ total_tests_per_thousand }}</h1></td>
+  								</tr>
+  						</tbody>
+
+  					</table>
+				</div>
+				
+				
+  					
+			</div>
+			<div class="pt-3 bg-black mb-5">
+        <div class="text-white text-center pt-5">
+          <h1>Comparison</h1>
+        </div>
+        <div class="text-center mt-5">
+          <img
+                src="{% static 'coronastats/confirmed_country_vs_outside.png' %}",
+                alt="not found",
+                width="600px"
+            />
+            <img
+              src="{% static 'coronastats/deaths_country_vs_outside.png' %}",
+                alt="not found",
+                width="600px"
+            />
+        </div>
+        {% if hasRegions == True %}
+            <div class="text-white text-center pt-5">
+              <h1>Regions</h1>
+            </div>
+            <div class="text-center text-center mt-5">
+                <img
+                src="{% static 'coronastats/regions.png' %}",
+                alt="not found",
+                width="600px"
+                />
+                
+            </div>
+        {% endif %}				
+        <div class="text-white text-center pt-5">
+					<h1>Graphs about the current situation</h1>
+				</div>
+				<div class="text-center">
+          <div class="mt-5">
+            <img
+                src="{% static 'coronastats/new_cases.png' %}",
+                alt="not found",
+                width="600px"
+            />
+            <img
+              src="{% static 'coronastats/total_cases.png' %}",
+                alt="not found",
+                width="600px"
+            />
+          </div>
+
+          <div class="mt-5">
+            <img
+              src="{% static 'coronastats/new_deaths.png' %}",
+                alt="not found",
+                width="600px"
+            />
+            <img
+              src="{% static 'coronastats/total_deaths.png' %}",
+                alt="not found",
+                width="600px"
+            />
+          </div>
+    				
+				</div>
+				
+  			</div>
+			
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}

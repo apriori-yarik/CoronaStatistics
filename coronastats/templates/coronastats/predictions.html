@@ -1,0 +1,89 @@
+{% extends 'coronastats/base.html' %} 
+{% load crispy_forms_tags %} 
+{% load static %} 
+{% block content %}
+
+<!--
+    <img src="{% static 'coronastats/01.png' %}" , alt="not found" width="750px" />
+-->
+<div class="bg-black pt-0">
+  <div class="container mb-5">
+  <!--<form method="POST">
+    {% csrf_token %}
+    <fieldset class="form-group mt-5 text-white-50">
+      <legend class="border-bottom mb-4 text-center">Charts By Country</legend>
+      <div class="form-row ml-2">
+        <div class="form-group col-md-6 mb-0">
+          
+        </div>
+        <div class="form-group col-md-6 mb-0">
+          
+        </div>
+      </div>
+         </fieldset>
+    <div class="form-group">
+      <button class="btn btn-outline-info" type="submit">Show</button>
+    </div>
+  </form> -->
+  
+    <form method="POST">
+    {% csrf_token %}
+    <fieldset class="form-group mt-5 text-white-50 justify-content-center">
+      <legend class="border-bottom mb-4 text-center">Show Country Page</legend>
+      <div class="form-row text-center d-flex justify-content-center">
+        <div class="form-group col-md-6 mb-0">
+          {{ form.country|as_crispy_field }}
+          <span>Write the full name of a country (e.g. Bulgaria, United States, Czech Republic, South Korea, Russia, etc.)</span>
+        </div>
+      </div>
+         </fieldset>
+    <div class="form-group d-flex justify-content-center">
+      <button class="btn btn-outline-info" type="submit">Show</button>
+    </div>
+  </form>
+  
+  <!--{% if img_name == 'plots' %}
+  <div class="d-flex flex-row justify-content-between align-items-center">
+    <div class="text-center ml-5">
+      <legend class="border-bottom mb-4 text-white-50"> {{ country }} Statistics</legend>
+      <table class="table">
+        <tr class="table-danger">
+          <th>New cases</th>
+          <th>{{ data.new_cases }}</th>
+        </tr>
+        <tr class="table-danger">
+          <th>Total cases</th>
+          <th>{{ data.total_cases }}</th>
+        </tr>
+        <tr class="table-danger">
+          <th>New deaths</th>
+          <th>{{ data.new_deaths }}</th>
+        </tr>
+        <tr class="table-danger">
+          <th>Total deaths</th>
+          <th>{{ data.total_deaths }}</th>
+        </tr>
+        <tr class="table-danger">
+          <th>New Tests</th>
+          <th>{{ data.new_tests }}</th>
+        </tr>
+        <tr class="table-danger">
+          <th>Total tests</th>
+          <th>{{ data.total_tests }}</th>
+        </tr>
+      </table>
+    </div>
+
+    <img
+      src="{% static 'coronastats/01.png' %}",
+      alt="not found",
+      width="600px"
+    />
+  </div>
+
+  {% endif %} -->
+</div>
+</div>
+
+
+{% endblock %}

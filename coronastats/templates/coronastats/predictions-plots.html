@@ -1,0 +1,45 @@
+{% extends 'coronastats/base.html' %} 
+{% load static %} 
+{% block content %}
+
+<div class="pt-3 bg-black mb-5">
+				<div class="text-white text-center pt-5 pb-5">
+					<h1>Prediction for the next two weeks - {{name}}</h1>
+				</div>
+				<div class="text-center">
+					<img
+      					src="{% static 'coronastats/prediction_new_cases.png' %}",
+      					alt="not found",
+      					width="600px"
+    				/>
+    				<img
+    					src="{% static 'coronastats/prediction_new_deaths.png' %}",
+      					alt="not found",
+      					width="600px"
+    				/>
+				</div>
+
+        <div class="container mb-5 mt-5">
+          <table class="table">
+              <thead>
+                <tr class="text-center text-white">
+                  <th><h1>Expected confirmed cases</h1></th>
+                  <th><h1>Expected total deaths</h1></th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                  <tr class="text-center text-white">
+                    <td><h1>{{ expected_confirmed }}</h1></td>
+                    <td><h1>{{ expected_deaths }}</h1></td>
+
+                  </tr>
+              </tbody>
+            </table>
+      </div>
+				
+  </div>
+
+
+
+{% endblock %}
