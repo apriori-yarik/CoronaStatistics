@@ -1,13 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
-*$py.class
 
-# C extensions
-*.so
-
-# Secrets
-secrets.py
 
 # Distribution / packaging
 .Python
@@ -104,8 +97,7 @@ ENV/
 .mypy_cache/
 
 .DS_Store
-*.sqlite3
-media/
+
 *.pyc
 *.db
 *.pid

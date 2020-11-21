@@ -1,0 +1,34 @@
+Europe
+Russia
+Bulgaria
+Germany
+France
+Italy
+Spain
+Ukraine
+Turkey
+Serbia
+8
+--------------------------------
+Asia
+China
+India
+Vietnam
+2
+--------------------------------
+North America
+US
+Canada
+2
+----------------------------------
+South America
+Brazil
+
+
+----------------------------------
+9
+
+
+
+To be added:
+Spain
