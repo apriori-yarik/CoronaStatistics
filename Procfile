@@ -1,1 +1,1 @@
-web: gunicorn src/CoronaStatistics.wsgi --log-file -
+web: gunicorn CoronaStatistics.wsgi --log-file -
