@@ -8,28 +8,16 @@ from .models import Country
 from .ml_predictions import new_cases_ml, new_deaths_ml
 from .man_Hopkins_data import confirmed_country_vs_outside, deaths_country_vs_outside, plot_pie_country_with_regions, hasRegions
 
-
+# Изглед за началната страница
 def home_view(request):
 	context = {
 		'title': 'CoronaStatistics',
 	}
 	return render(request, 'coronastats/home.html', context)
 
+# Изглед за началната страница от раздела "Данни за всяка една държава" - показване на форма
 def stats_by_country_view(request):
-	#image_name = ""
-	#data = {}
 	country = ""
-	#form = CountryForm()
-	#if request.method == 'POST':
-	#	form = CountryForm(request.POST)
-	#	if form.is_valid():
-	#		image_name = "plots"
-	#		country = form.cleaned_data['country']
-	#		type_of_chart = form.cleaned_data['choice']
-	#		plots.new_cases_by_country(country, type_of_chart)
-	#		data = plots.get_info(country)
-	#else:
-	#	form = CountryForm()
 
 	form2 = CountryPageForm()
 	if request.method == 'POST':
@@ -42,14 +30,12 @@ def stats_by_country_view(request):
 	
 	context = {
 		'title': 'By Country',
-		#'form': form,
 		'form2': form2,
-		#'img_name': image_name,
-		#'data': data,
 		'country': country
 	}
 	return render(request, 'coronastats/stats_by_country.html', context)
 
+# Изглед за раздела "Данни за света"
 def world_view(request):
 	total_cases_info = plots.get_15_total_cases()
 	new_cases_info = plots.get_15_new_cases()
@@ -65,6 +51,7 @@ def world_view(request):
 
 	return render(request, 'coronastats/world.html', context)
 
+# Изгледа за раздела "Данни за всяка една държава"
 def country_view(request, name):
 	confirmed_country_vs_outside(name)
 	deaths_country_vs_outside(name)
@@ -76,6 +63,7 @@ def country_view(request, name):
 	print(context)
 	return render(request, 'coronastats/country.html', context)
 
+# Изглед за раздела "Прогнози" - показване на форма
 def predictions_forms_view(request):
 	country = ""
 	form2 = CountryPageForm()
@@ -95,6 +83,7 @@ def predictions_forms_view(request):
 
 	return render(request, 'coronastats/predictions.html', context)
 
+# Изглед за раздела "Прогнози" -
 def predictions_view(request, name):
 	expected_confirmed = new_cases_ml(name)
 	expected_deaths = new_deaths_ml(name)

@@ -12,11 +12,11 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 import datetime
 import operator
 
-
+# Извличане и обработване на данните
 confirmed_cases = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv')
 deaths_reported = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv')
 recovered_cases = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv')
-latest_data = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/10-27-2020.csv')
+latest_data = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/11-23-2020.csv')
 
 confirmed_cases['Country/Region'].replace({'US': 'United States', "Czechia": "Czech Republic", "Korea, South": "South Korea", "North Macedonia": "Macedonia"}, inplace=True)
 deaths_reported['Country/Region'].replace({'US': 'United States', "Czechia": "Czech Republic", "Korea, South": "South Korea", "North Macedonia": "Macedonia"}, inplace=True)
@@ -31,7 +31,7 @@ recoveries = recovered_cases.loc[:, cols[4]:cols[-1]]
 
 dates = confirmed.keys()
 
-
+# Функция, която служи за пресмятане на разликата в случаите на два последователни дни (покачването на случаите) 
 def daily_increase(data):
     d = []
     for i in range(len(data)):
@@ -41,6 +41,7 @@ def daily_increase(data):
             d.append(data[i] - data[i-1])
     return d
 
+# Функция, която генерира прогноза за новите случаи на заразени
 def new_cases_ml(country_name):
 	cases = []
 	for i in dates:
@@ -51,19 +52,19 @@ def new_cases_ml(country_name):
 	future = 30
 	past = 250
 
-	values = cases # keeping all the values form money.curs into a seperate array
+	values = cases
 	start = past
 	end = len(values) - future
 
-	raw_data = [] # keeping all the information needed to to make the predictions - the previous values and the next which will be used to test our ML model
+	raw_data = [] 
 	for i in range(start, end):
 		pfv = values[(i - past):(i + future)]
 		raw_data.append(list(pfv))
 
-	past_columns = [] # keeping the previous values
+	past_columns = []
 	for i in range(past):
 		past_columns.append("past_{}".format(i))
-	future_columns = [] # keeping the next values
+	future_columns = []
 	for i in range(future):
 		future_columns.append("future_{}".format(i))
 
@@ -76,6 +77,8 @@ def new_cases_ml(country_name):
 
 
 	pred_X_test = df.iloc[:, len(df.columns) - past:]
+
+	# Използване на линейната регресия като алгоритъм за генериране на прогноза
 	LinReg = LinearRegression()
 	LinReg.fit(X, y)
 	prediction = LinReg.predict(pred_X_test)[0]
@@ -88,9 +91,7 @@ def new_cases_ml(country_name):
 	for item in prediction[16:31]:
 		new_confirmed += item
 
-
-
-
+	# Построяване на графика
 	plt.clf()
 	plt.style.use('default')
 	plt.style.use('dark_background')
@@ -107,6 +108,7 @@ def new_cases_ml(country_name):
 
 	return str(int(last_cases + new_confirmed))
 
+# Функция, която генерира прогноза за леталните случаи
 def new_deaths_ml(country_name):
 	cases = []
 	for i in dates:
@@ -117,11 +119,11 @@ def new_deaths_ml(country_name):
 	future = 30
 	past = 250
 
-	values = cases # keeping all the values form money.curs into a seperate array
+	values = cases
 	start = past
 	end = len(values) - future
 
-	raw_data = [] # keeping all the information needed to to make the predictions - the previous values and the next which will be used to test our ML model
+	raw_data = []
 	for i in range(start, end):
 		pfv = values[(i - past):(i + future)]
 		raw_data.append(list(pfv))
@@ -142,6 +144,8 @@ def new_deaths_ml(country_name):
 
 
 	pred_X_test = df.iloc[:, len(df.columns) - past:]
+
+	# Използване на линейната регресия като алгоритъм за генериране на прогноза
 	LinReg = LinearRegression()
 	LinReg.fit(X, y)
 	prediction = LinReg.predict(pred_X_test)[0]
@@ -154,7 +158,7 @@ def new_deaths_ml(country_name):
 		new_confirmed += item
 
 
-
+	# Построяване на графика
 	plt.clf()
 	plt.style.use('default')
 	plt.style.use('dark_background')

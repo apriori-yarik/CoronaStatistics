@@ -9,10 +9,11 @@ import datetime
 import operator
 plt.style.use('fivethirtyeight')
 
+# Извличане и обработване на данните 
 confirmed_cases = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv')
 deaths_reported = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv')
 recovered_cases = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv')
-latest_data = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/10-27-2020.csv')
+latest_data = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/11-23-2020.csv')
 
 confirmed_cases['Country/Region'].replace({'US': 'United States', "Czechia": "Czech Republic", "Korea, South": "South Korea", "North Macedonia": "Macedonia"}, inplace=True)
 deaths_reported['Country/Region'].replace({'US': 'United States', "Czechia": "Czech Republic", "Korea, South": "South Korea", "North Macedonia": "Macedonia"}, inplace=True)
@@ -25,6 +26,8 @@ confirmed = confirmed_cases.loc[:, cols[4]:cols[-1]]
 deaths = deaths_reported.loc[:, cols[4]:cols[-1]]
 recoveries = recovered_cases.loc[:, cols[4]:cols[-1]]
 
+
+# Обработване на данни за света
 dates = confirmed.keys()
 world_cases = []
 total_deaths = []
@@ -43,6 +46,7 @@ for i in dates:
     total_recovered.append(recovered_sum)
     total_active.append(confirmed_sum - death_sum-recovered_sum)
 
+# Функция, която служи за пресмятане на разликата в случаите на два последователни дни (покачването на случаите) 
 def daily_increase(data):
     d = []
     for i in range(len(data)):
@@ -58,6 +62,7 @@ world_daily_recovery = daily_increase(total_recovered)
 
 unique_countries = list(latest_data['Country_Region'].unique())
 
+# Обработване на данни за конкретна държава
 country_confirmed_cases = []
 country_death_cases = []
 country_active_cases = []
@@ -86,6 +91,7 @@ for i in range(len(unique_countries)):
     country_mortality_rate.append(country_death_cases[i]/country_confirmed_cases[i])
     
 
+# Обработване на данни за различните области/провинции
 unique_provinces = list(latest_data['Province_State'].unique())
 
 province_confirmed_cases = []
@@ -127,7 +133,7 @@ for i in nan_indices:
     unique_provinces.pop(i)
     province_confirmed_cases.pop(i)
 
-
+# Сравнение на потвърдените случаи в света със случаите в конкретна държава
 def confirmed_country_vs_outside(country_name):
 	confirmed = latest_data[latest_data['Country_Region']==country_name]['Confirmed'].sum()
 	outside_confirmed = np.sum(country_confirmed_cases) - confirmed
@@ -141,6 +147,7 @@ def confirmed_country_vs_outside(country_name):
 	plt.tight_layout()
 	plt.savefig('static/coronastats/confirmed_country_vs_outside.png')
 
+# Сравнение на леталните случаи в света със случаите в конкретна държава
 def deaths_country_vs_outside(country_name):
 	deaths = latest_data[latest_data['Country_Region']==country_name]['Deaths'].sum()
 	outside_deaths = np.sum(country_death_cases) - deaths
@@ -154,6 +161,7 @@ def deaths_country_vs_outside(country_name):
 	plt.tight_layout()
 	plt.savefig('static/coronastats/deaths_country_vs_outside.png')
 
+# Построяване на диаграма
 def plot_pie_charts(x, y, title):
     c = random.choices(list(mcolors.TABLEAU_COLORS.values()), k=len(unique_countries))
     plt.style.use('dark_background')
@@ -164,6 +172,7 @@ def plot_pie_charts(x, y, title):
     plt.tight_layout()
     plt.savefig('static/coronastats/regions.png')
 
+# Построяване на диаграма за регионите
 def plot_pie_country_with_regions(country_name, title):
     regions = list(latest_data[latest_data['Country_Region']==country_name]['Province_State'].unique())
     confirmed_cases = []
@@ -193,7 +202,7 @@ def plot_pie_country_with_regions(country_name, title):
     else:
         plot_pie_charts(regions, confirmed_cases, title)
 
-
+# Проверка дали дадена държава съдържа информация за регионите в нея
 def hasRegions(country_name):
     regions = list(latest_data[latest_data['Country_Region']==country_name]['Province_State'].unique())
     print(regions)

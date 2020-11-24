@@ -15,10 +15,12 @@ from sklearn.preprocessing import PolynomialFeatures
 
 plt.style.use('fivethirtyeight')
 
+
+# Извличане и обработване на данни
 confirmed_cases = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv')
 deaths_reported = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv')
 recovered_cases = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv')
-latest_data = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/10-27-2020.csv')
+latest_data = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/11-23-2020.csv')
 
 cols = confirmed_cases.keys()
 confirmed = confirmed_cases.loc[:, cols[4]:cols[-1]]
@@ -40,6 +42,7 @@ def daily_increase(data):
             d.append(data[i] - data[i-1])
     return d
 
+# Функция за построяване на графики
 def plot_predictions(x, y, pred, algo_name, color):
     plt.figure(figsize=(16, 9))
     #plt.plot(x, y)
@@ -52,6 +55,7 @@ def plot_predictions(x, y, pred, algo_name, color):
     plt.yticks(size=20)
     plt.savefig('static/coronastats/prediction_new_cases.png')
 
+# Функция, осъществяваща създаването на прогноза
 def new_cases_prediction(country):
 	cases = []
 	for i in dates:
@@ -61,9 +65,10 @@ def new_cases_prediction(country):
 	cases = np.array(cases).reshape(-1, 1)
 
 	
-
+	# Подготвяне на тренировъчните и тестовите данни
 	X_train_confirmed, X_test_confirmed, y_train_confirmed, y_test_confirmed = train_test_split(days_since_1_22, cases, test_size=0.25, shuffle=False)
 	
+	# Използване на полиномна регресия
 	poly = PolynomialFeatures(degree=3)
 	poly_X_train_confirmed = poly.fit_transform(X_train_confirmed)
 	poly_X_test_confirmed = poly.fit_transform(X_test_confirmed)

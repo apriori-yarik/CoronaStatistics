@@ -12,6 +12,7 @@ import math
 url = 'https://covid.ourworldindata.org/data/owid-covid-data.csv'
 data = pd.read_csv(url)
 
+# Създаване на графика по новите случаи
 def new_cases_by_country(country, type_of_chart):
 	print(type_of_chart)
 	filt = (data['location'] == country)
@@ -24,13 +25,9 @@ def new_cases_by_country(country, type_of_chart):
 	type_of_chart = type_of_chart.capitalize()
 	type_of_chart = type_of_chart.replace('_', ' ')
 
-	# if another_country == "" or another_country == None:
 	plt.clf()
 
 	plt.style.use('dark_background')
-
-	
-		
 
 	plt.plot_date(dates, cases, linestyle='solid', marker="")
 	plt.gcf().autofmt_xdate()
@@ -42,6 +39,7 @@ def new_cases_by_country(country, type_of_chart):
 	plt.savefig('static/coronastats/01.png')
 	print('yes!')
 
+# Извличане на информация за дадена държава
 def get_info(country):
 	filt = (data['location'] == country)
 	collected = data.loc[filt, ['date', 'new_cases', 'total_cases', 'total_deaths', 'new_deaths', 'new_tests', 'total_tests']]
@@ -63,6 +61,7 @@ def get_info(country):
 		'total_tests': total_tests
 	}
 
+# Извличане на първите 15 държави по случаи на заразени от коронавирус
 def get_15_total_cases():
 	# data.fillna(method='ffill', inplace=True)
 	filt = (data['date']==(date.today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))
@@ -78,6 +77,7 @@ def get_15_total_cases():
 	print(info)
 	return info
 
+# Извличане на първите 15 държави по новозаразени
 def get_15_new_cases():
 	# data.fillna(method='ffill', inplace=True)
 	filt = (data['date']==(date.today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))
@@ -93,6 +93,7 @@ def get_15_new_cases():
 	print(info)
 	return info
 
+# Извличане на първите 15 държави по летални случаи
 def get_15_deaths():
 	filt = (data['date']==(date.today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))
 	df = data.loc[filt, ['location', 'total_deaths']]
@@ -118,6 +119,7 @@ def get_start_info():
 	total_deaths = total_deaths_data.iloc[total_deaths_data.shape[0] - 2, 1]
 	return {'total_deaths': total_deaths, 'total_cases': total_cases, 'new_cases': new_cases}
 
+# Създаване на графики за дадена държава и връщането на пълната информация за нея във вид на асоциативен масив
 def get_stats_by_country(country_name):
 	filt = (data['date']==(date.today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d')) #and (data['location']==country_name))
 	country_data = data.loc[filt]
@@ -150,6 +152,7 @@ def get_stats_by_country(country_name):
 		'title': 'CoronaStatistcis - ' + country_name,
 	}
 
+# Построяване на графика за новозаразените
 def get_plot_chart_new_cases(name):
 	type_of_chart = 'new_cases'
 	filt = data['location'] == name
@@ -160,7 +163,6 @@ def get_plot_chart_new_cases(name):
 
 	type_of_chart_text = type_of_chart.capitalize()
 	type_of_chart_text = type_of_chart_text.replace('_', ' ')
-
 
 	plt.clf()
 	plt.style.use('default')
@@ -176,6 +178,7 @@ def get_plot_chart_new_cases(name):
 	plt.tight_layout()
 	plt.savefig('static/coronastats/new_cases.png')
 
+# Постровяне на графика за всички случаи общо
 def get_plot_chart_total_cases(name):
 	type_of_chart = 'total_cases'
 	filt = data['location'] == name
@@ -186,7 +189,6 @@ def get_plot_chart_total_cases(name):
 
 	type_of_chart_text = type_of_chart.capitalize()
 	type_of_chart_text = type_of_chart_text.replace('_', ' ')
-
 
 	plt.clf()
 	plt.style.use('default')
@@ -203,7 +205,7 @@ def get_plot_chart_total_cases(name):
 	plt.tight_layout()
 	plt.savefig('static/coronastats/total_cases.png')
 
-
+# Построяване на графика за леталните случаи
 def get_plot_chart_total_deaths(name):
 	type_of_chart = 'total_deaths'
 	filt = data['location'] == name
@@ -230,6 +232,7 @@ def get_plot_chart_total_deaths(name):
 	plt.tight_layout()
 	plt.savefig('static/coronastats/total_deaths.png')
 
+# Построяване на графика за новите летални случаи
 def get_plot_chart_new_deaths(name):
 	type_of_chart = 'new_deaths'
 	filt = data['location'] == name
@@ -240,7 +243,6 @@ def get_plot_chart_new_deaths(name):
 
 	type_of_chart_text = type_of_chart.capitalize()
 	type_of_chart_text = type_of_chart_text.replace('_', ' ')
-
 
 	plt.clf()
 	plt.style.use('default')
