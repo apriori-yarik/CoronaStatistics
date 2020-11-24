@@ -1,6 +1,7 @@
 from django.urls import path
 from coronastats.views import home_view, stats_by_country_view, world_view, country_view, predictions_forms_view, predictions_view #, register_view, login_view
 
+# Свързване на изгледите (views) към пътищата 
 urlpatterns = [
     path('', home_view, name='home'),
     path('stats-by-country/', stats_by_country_view, name='stats-by-country'),
@@ -8,8 +9,6 @@ urlpatterns = [
     path('world/', world_view, name='world'),
     path('predictions/', predictions_forms_view, name='predictions-form'),
     path('predictions/<str:name>', predictions_view, name='predictions'),
-    #path('register/', register_view, name='register'),
-    #path('login/', login_view, name='login')
 ]
 
 
