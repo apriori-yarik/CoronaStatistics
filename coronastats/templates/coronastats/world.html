@@ -3,30 +3,7 @@
 {% load static %} 
 {% block content %}
 	<div class="bg-black pt-5">
-		<div class="pt-5 pb-5">
-			<div class="container mb-5">
-					<table class="table">
-  						<thead>
-  							<tr class="text-center text-white">
-  								<th><h1>New cases</h1></th>
-  								<th><h1>Total cases</h1></th>
-  								<th><h1>Deaths</h1></th>
-  							</tr>
-  						</thead>
-  						<tbody>
-  							
-  								<tr class="text-center text-white">
-  									<td><h1>{{ world_info.new_cases }}</h1></td>
-  									<td><h1>{{ world_info.total_cases }}</h1></td>
-  									<td><h1>{{ world_info.total_deaths }}</h1></td>
-
-  								</tr>
-  						</tbody>
-  					</table>
-			</div>
-			
-		</div>
-  		<div class="container mb-5">
+		  		<div class="container mb-5">
   			<h1 class="text-center font-weight-bold color-white text-white mb-5">World Map from the Beginning</h1>
   			<div class="text-center mb-5">
   				<img src="{% static 'coronastats/gif/Dynamic Covid-19 progression.gif' %}" class="rounded">

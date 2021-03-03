@@ -1,0 +1,31 @@
+{% extends 'coronastats/base.html' %} 
+{% load crispy_forms_tags %} 
+{% load static %} 
+{% block content %}
+
+
+<div class="container mb-5">
+  	<h1 class="text-center font-weight-bold color-white text-white mb-5 pr-5">Prediction</h1>
+  	<table class="table">
+  						<thead>
+  							<tr class="text-center text-white">
+  								<th><h2>Normal</h2></th>
+  								<th><h2>Viral Pneumonia</h2></th>
+  								<th><h2>COVID-19</h2></th>
+  							</tr>
+  						</thead>
+  						<tbody>
+  							
+  								<tr class="text-center text-white">
+  									<td><h2>{{ normal_prob }}%</h2></td>
+  									<td><h2>{{ pneumonia_prob }}%</h2></td>
+  									<td><h2>{{ covid_prob }}%</h2></td>
+
+  								</tr>
+  						</tbody>
+  					</table>
+  					<h1 class="text-center font-weight-bold color-white text-white mt-5">Verdict - {{result}}</h1>
+ </div>
+
+
+{% endblock %}

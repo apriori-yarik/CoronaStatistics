@@ -1,0 +1,32 @@
+{% extends 'coronastats/base.html' %} 
+{% load crispy_forms_tags %} 
+{% load static %} 
+{% block content %}
+
+<!--
+    <img src="{% static 'coronastats/01.png' %}" , alt="not found" width="750px" />
+-->
+<div class="bg-black pt-0">
+  <div class="container mb-5">
+    <div class="align-items-center">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group mt-5 text-white-50 justify-content-center">
+        <legend class="border-bottom mb-4 text-center">COVID-19 / Viral Pneumonia / Normal</legend>
+        <div class="form-row text-center d-flex justify-content-center">
+          <div class="form-group col-md-6 mb-0">
+            {{ form.image|as_crispy_field }}
+            <span>Upload an image (.png file)</span>
+          </div>
+        </div>
+        </fieldset>
+        <div class="form-group d-flex justify-content-center">
+          <button class="btn btn-outline-info" type="submit">Show</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

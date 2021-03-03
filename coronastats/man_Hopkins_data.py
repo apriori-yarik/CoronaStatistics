@@ -12,19 +12,19 @@ plt.style.use('fivethirtyeight')
 # Извличане и обработване на данните 
 confirmed_cases = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv')
 deaths_reported = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv')
-recovered_cases = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv')
+#recovered_cases = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv')
 latest_data = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/11-23-2020.csv')
 
 confirmed_cases['Country/Region'].replace({'US': 'United States', "Czechia": "Czech Republic", "Korea, South": "South Korea", "North Macedonia": "Macedonia"}, inplace=True)
 deaths_reported['Country/Region'].replace({'US': 'United States', "Czechia": "Czech Republic", "Korea, South": "South Korea", "North Macedonia": "Macedonia"}, inplace=True)
-recovered_cases['Country/Region'].replace({'US': 'United States', "Czechia": "Czech Republic", "Korea, South": "South Korea", "North Macedonia": "Macedonia"}, inplace=True)
+#recovered_cases['Country/Region'].replace({'US': 'United States', "Czechia": "Czech Republic", "Korea, South": "South Korea", "North Macedonia": "Macedonia"}, inplace=True)
 latest_data['Country_Region'].replace({'US': 'United States', "Czechia": "Czech Republic", "Korea, South": "South Korea", "North Macedonia": "Macedonia"}, inplace=True)
 
 cols = confirmed_cases.keys()
 
 confirmed = confirmed_cases.loc[:, cols[4]:cols[-1]]
 deaths = deaths_reported.loc[:, cols[4]:cols[-1]]
-recoveries = recovered_cases.loc[:, cols[4]:cols[-1]]
+#recoveries = recovered_cases.loc[:, cols[4]:cols[-1]]
 
 
 # Обработване на данни за света
@@ -39,12 +39,12 @@ total_active = []
 for i in dates:
     confirmed_sum = confirmed[i].sum()
     death_sum = deaths[i].sum()
-    recovered_sum = recoveries[i].sum()
+    #recovered_sum = recoveries[i].sum()
     
     world_cases.append(confirmed_sum)
     total_deaths.append(death_sum)
-    total_recovered.append(recovered_sum)
-    total_active.append(confirmed_sum - death_sum-recovered_sum)
+    #total_recovered.append(recovered_sum)
+    #total_active.append(confirmed_sum - death_sum-recovered_sum)
 
 # Функция, която служи за пресмятане на разликата в случаите на два последователни дни (покачването на случаите) 
 def daily_increase(data):
@@ -58,7 +58,7 @@ def daily_increase(data):
 
 world_daily_increase = daily_increase(world_cases)
 world_daily_death = daily_increase(total_deaths)
-world_daily_recovery = daily_increase(total_recovered)
+#world_daily_recovery = daily_increase(total_recovered)
 
 unique_countries = list(latest_data['Country_Region'].unique())
 
@@ -135,7 +135,8 @@ for i in nan_indices:
 
 # Сравнение на потвърдените случаи в света със случаите в конкретна държава
 def confirmed_country_vs_outside(country_name):
-	confirmed = latest_data[latest_data['Country_Region']==country_name]['Confirmed'].sum()
+	#info = get_stats_by_country(country_name)
+	confirmed = latest_data[latest_data['Country_Region']==country_name]['Confirmed'].sum() / info['population']
 	outside_confirmed = np.sum(country_confirmed_cases) - confirmed
 	plt.style.use('dark_background')
 	plt.figure(figsize=(16, 9))

@@ -13,5 +13,11 @@ class CountryForm(forms.Form):
 class CountryPageForm(forms.Form):
 	country = forms.CharField()
 
+class NNImageForm(forms.Form):
+	image = forms.ImageField()
 
+class CreateUserForm(UserCreationForm):
+	class Meta:
+		model = User
+		fields = ['username', 'email', 'password1', 'password2']
 

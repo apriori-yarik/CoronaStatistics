@@ -12,6 +12,41 @@ import math
 url = 'https://covid.ourworldindata.org/data/owid-covid-data.csv'
 data = pd.read_csv(url)
 
+def comparison(country):
+	filt = (data['date']==(date.today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))
+	country_data = data.loc[filt]
+	filt2 = (country_data['location']==country)
+	filt3 = (country_data['location']=='World')
+	country_data_info = country_data.loc[filt2]
+	world_data_info = country_data.loc[filt3]
+	to_million_country = country_data_info['total_cases_per_million']
+	to_million_world = world_data_info['total_cases_per_million']
+
+	plt.style.use('dark_background')
+	plt.figure(figsize=(16, 9))
+	plt.barh(country, to_million_country)
+	plt.barh(f'Outside {country}', to_million_world)
+	plt.title('Number of Coronavirus Confirmed Cases', size=20)
+	plt.xticks(size=29)
+	plt.yticks(size=20)
+	plt.tight_layout()
+	plt.savefig('static/coronastats/confirmed_country_vs_outside.png')
+
+	to_million_world = world_data_info['total_deaths_per_million']
+	to_million_country = country_data_info['total_deaths_per_million']
+	comparison_deaths(to_million_world, to_million_country, country)
+
+def comparison_deaths(to_million_world, to_million_country, country):
+	plt.style.use('dark_background')
+	plt.figure(figsize=(16, 9))
+	plt.barh(country, to_million_country)
+	plt.barh(f'Outside {country}', to_million_world)
+	plt.title('Number of Coronavirus Confirmed Cases', size=20)
+	plt.xticks(size=29)
+	plt.yticks(size=20)
+	plt.tight_layout()
+	plt.savefig('static/coronastats/deaths_country_vs_outside.png')
+
 # Създаване на графика по новите случаи
 def new_cases_by_country(country, type_of_chart):
 	print(type_of_chart)

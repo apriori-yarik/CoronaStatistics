@@ -34,7 +34,6 @@ ALLOWED_HOSTS = ['coronastatistics19.herokuapp.com', '127.0.0.1']
 
 INSTALLED_APPS = [
     'coronastats.apps.CoronastatsConfig',
-    'register.apps.RegisterConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'CoronaStatistics'
 ]
 
 MIDDLEWARE = [
